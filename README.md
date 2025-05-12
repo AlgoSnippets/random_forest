@@ -59,13 +59,9 @@ The script will: - Print training and test set metrics (MSE, RMSE, MAE, R²). - 
 ### **How It Works**
 
 - **Feature Engineering:**
+
   - Calculates daily returns:
-
-$$
-\text{Returns}_t = \frac{\text{Close}_t - \text{Close}_{t-1}}{\text{Close}_{t-1}}
-$$
-
-    - Calculates rolling volatility (annualized standard deviation over a 20-day window).
+  - Calculates rolling volatility (annualized standard deviation over a 20-day window).
 
 - **Data Preparation:**
   - Scales volatility using MinMaxScaler.
