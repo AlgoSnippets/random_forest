@@ -1,22 +1,25 @@
-## Stock Volatility Prediction with Random Forest
+# Stock Volatility Prediction with Random Forest
 
-This repository contains a Python script for predicting stock volatility using a Random Forest regression model. The script processes historical stock data, trains a machine learning model, evaluates its performance, and visualizes the results.
-
----
-
-### **Features**
-
-- Loads historical stock price data from CSV.
-- Computes daily returns and rolling volatility.
-- Scales features for robust model training.
-- Prepares time series data for supervised learning.
-- Trains a Random Forest regressor to predict future volatility.
-- Evaluates model performance with standard regression metrics.
-- Visualizes actual vs. predicted volatility.
+This repository provides a Python implementation for predicting future stock volatility using a Random Forest regression model. The code uses historical price and volume data, engineers a variety of time-series features, and forecasts volatility over a user-defined horizon. The approach is suitable for financial analysts, data scientists, and machine learning practitioners interested in time-series forecasting and quantitative finance.
 
 ---
 
-### **Requirements**
+## Features
+
+- **Time-Series Feature Engineering:**
+  Lagged returns, rolling statistics, price ratios, and more.
+- **Target Variable:**
+  Predicts future realized volatility over a configurable window (e.g., 20 trading days).
+- **Random Forest Regression:**
+  Robust ensemble learning with hyperparameter tuning via grid search.
+- **Evaluation \& Visualization:**
+  Comprehensive metrics (MSE, RMSE, MAE, R²) and plots of actual vs. predicted volatility.
+- **Feature Importance:**
+  Ranks the top drivers of volatility predictions.
+
+---
+
+## Requirements
 
 - Python 3.7+
 - pandas
@@ -32,18 +35,19 @@ pip install pandas numpy scikit-learn matplotlib
 
 ---
 
-### **Usage**
+## Usage
 
 1. **Prepare Data**
    - Download historical stock data (e.g., from Yahoo Finance) and save as `data_cache/{TICKER}_data.csv`.
-   - The CSV should include at least a `Date` column (as index) and a `Close` column.
-2. **Edit Parameters**
-   - In `main.py`, set the desired ticker, start date, and end date:
+   - The CSV should contain columns: `Date`, `Open`, `High`, `Low`, `Close`, `Volume`.
+2. **Configure Parameters**
+   - Edit `main.py` to set your ticker, date range, and prediction horizon:
 
 ```python
 ticker = 'AAPL'
 start_date = '2020-01-01'
 end_date = '2025-04-25'
+target_days = 20  # Predict volatility 20 days ahead
 ```
 
 3. **Run the Script**
@@ -52,38 +56,26 @@ end_date = '2025-04-25'
 python main.py
 ```
 
-The script will: - Print training and test set metrics (MSE, RMSE, MAE, R²). - Display a plot comparing actual and predicted volatility.
+    - The script will print training and test metrics, plot actual vs. predicted volatility, and display the top 10 most important features.
 
 ---
 
-### **How It Works**
+## How It Works
 
 - **Feature Engineering:**
-
-  - Calculates daily returns:
-  - Calculates rolling volatility (annualized standard deviation over a 20-day window).
-
-- **Data Preparation:**
-  - Scales volatility using MinMaxScaler.
-  - Creates input sequences of length 20 for supervised learning.
+  The script creates lagged and rolling features from price and volume, and computes ratios such as high/low and close/open.
+- **Target Construction:**
+  Future volatility is calculated as the rolling standard deviation of returns, annualized for comparability.
 - **Model Training:**
-  - Splits data into training (80%) and test (20%) sets.
-  - Trains a Random Forest regressor on the training set.
+  Data is split chronologically into training and test sets. Features are scaled, and Random Forest hyperparameters are optimized using grid search.
 - **Evaluation:**
-  - Computes MSE, RMSE, MAE, and R² on both training and test sets.
-  - Plots actual vs. predicted volatility for visual inspection.
+  Model performance is assessed with standard regression metrics and visualized for easy interpretation.
+- **Feature Importance:**
+  The script outputs the top features influencing volatility predictions.
 
 ---
 
-### **Customization**
-
-- Change the `window_size` parameter to adjust the lookback period.
-- Tune Random Forest hyperparameters (e.g., `n_estimators`) for improved performance.
-- Adapt the script for different tickers or data sources.
-
----
-
-### **Example Output**
+## Example Output
 
 ```
 Training Metrics:
@@ -91,22 +83,14 @@ Training Metrics:
 
 Test Metrics:
 {'MSE': 0.0002, 'RMSE': 0.014, 'MAE': 0.011, 'R2': 0.90}
+
+Top 10 most important features:
+      Value                Feature
+0  0.1623      Returns_lag_1
+1  0.1208      Returns_rolling_std_20
+...
 ```
 
-A plot will be shown comparing actual and predicted volatility over time.
-
----
-
-### **License**
-
-This project is released under the MIT License.
-
----
-
-### **Acknowledgments**
-
-- [scikit-learn](https://scikit-learn.org/)
-- [pandas](https://pandas.pydata.org/)
-- [matplotlib](https://matplotlib.org/)
+A plot will be shown comparing actual and predicted future volatility.
 
 ---
