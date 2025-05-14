@@ -94,3 +94,5 @@ Top 10 most important features:
 A plot will be shown comparing actual and predicted future volatility.
 
 ---
+
+**Note:** This code is for educational and research purposes only. Not investment advice.
